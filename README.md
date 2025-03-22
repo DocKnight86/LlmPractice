@@ -4,7 +4,7 @@ Version 1
 
 A local running LLM built into a Blazor App.
 
-Requires .NET 9, Docker running ollama llama3.1 on port 11434
+Requires .NET 9 and Docker running ollama llama3.1 on port 11434
 
 Can easily switch to any other LLM - https://ollama.com/library
 
