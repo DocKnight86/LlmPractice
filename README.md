@@ -8,4 +8,5 @@ Requires .NET 9, Docker running ollama llama3.1 on port 11434
 
 Watch a demo video here: 
 (In version 2 there will be a "Thinking" indicator added. Feel free to jump around as some of the responses take some time due to the hardware limitations of my laptop.)
+
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/6Y4LnnlxGQk/0.jpg)](https://www.youtube.com/watch?v=6Y4LnnlxGQk)
