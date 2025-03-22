@@ -29,7 +29,7 @@
 @code {
     private string _userInput = string.Empty;
 
-    // This list will keep all chat messages (both user and assistant)
+    // This list will keep all chat messages (both user and bot)
     private List<ChatMessageDisplay> _chatHistory = new();
 
     // DTO for displaying chat messages on the UI.
@@ -54,8 +54,7 @@
 
         try
         {
-            // Call the ChatHistory endpoint on the API using the absolute URL.
-            // Will change this in the future
+            // Call the ChatHistory endpoint on the API using the absolute URL which will be changed in the future to auto detect.
             HttpResponseMessage response = await Http.PostAsJsonAsync("http://localhost:5000/api/chat/chathistory", prompt);
             if (response.IsSuccessStatusCode)
             {
