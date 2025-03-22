@@ -8,4 +8,4 @@ Requires .NET 9, Docker running ollama llama3.1 on port 11434
 
 Watch a demo video here: 
 (Jump ahead to 40 seconds after I first type in hello, quick loading will be fixed in V2)
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/KcARRbxvsKY/0.jpg)](https://www.youtube.com/watch?v=KcARRbxvsKY)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/6Y4LnnlxGQk/0.jpg)](https://www.youtube.com/watch?v=6Y4LnnlxGQk)
