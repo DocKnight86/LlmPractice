@@ -1,0 +1,34 @@
+[
+  {
+    "ContainingType": "LlmPractice.Controllers.ChatController",
+    "Method": "Chat",
+    "RelativePath": "api/Chat",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "chatPrompt",
+        "Type": "LlmPractice.Models.ChatPrompt",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "LlmPractice.Controllers.ChatController",
+    "Method": "ChatHistory",
+    "RelativePath": "api/Chat/chathistory",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "chatPrompt",
+        "Type": "LlmPractice.Models.ChatPrompt",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

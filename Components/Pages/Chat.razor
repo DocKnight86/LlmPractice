@@ -1,0 +1,85 @@
+﻿@rendermode InteractiveServer
+@page "/chat"
+@using LlmPractice.Models
+@inject HttpClient Http
+
+<h3>Chat with Dan Bot</h3>
+
+<div class="chat-container" style="display: flex; flex-direction: column; height: 80vh; border: 1px solid #ccc; padding: 10px;">
+    <!-- Chat history at the top -->
+    <div class="chat-history" style="flex: 1; overflow-y: auto; margin-bottom: 10px;">
+        <h4>Chat History</h4>
+        <ul class="list-group">
+            @foreach (ChatMessageDisplay msg in _chatHistory)
+            {
+                <li class="list-group-item">
+                    <strong>@(msg.Role.Equals("Assistant", StringComparison.OrdinalIgnoreCase) ? "Dan Bot" : msg.Role):</strong> @msg.Message
+                </li>
+            }
+        </ul>
+    </div>
+
+    <!-- Chat input at the bottom -->
+    <div class="chat-input">
+        <textarea class="form-control" @bind="_userInput" placeholder="Type your message here..." rows="3"></textarea>
+        <button class="btn btn-primary mt-2" @onclick="SendMessage">Send</button>
+    </div>
+</div>
+
+@code {
+    private string _userInput = string.Empty;
+
+    // This list will keep all chat messages (both user and assistant)
+    private List<ChatMessageDisplay> _chatHistory = new();
+
+    // DTO for displaying chat messages on the UI.
+    public class ChatMessageDisplay
+    {
+        public string Role { get; set; }
+        public string Message { get; set; }
+    }
+
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(_userInput))
+        {
+            return;
+        }
+
+        // Add the user's message immediately to the chat history.
+        _chatHistory.Add(new ChatMessageDisplay { Role = "User", Message = _userInput });
+
+        // Create a ChatPrompt object to send to the API.
+        ChatPrompt prompt = new ChatPrompt { Message = _userInput };
+
+        try
+        {
+            // Call the ChatHistory endpoint on the API using the absolute URL.
+            // Will change this in the future
+            HttpResponseMessage response = await Http.PostAsJsonAsync("http://localhost:5000/api/chat/chathistory", prompt);
+            if (response.IsSuccessStatusCode)
+            {
+                List<ChatMessageDisplay>? messages = await response.Content.ReadFromJsonAsync<List<ChatMessageDisplay>>();
+                if (messages != null && messages.Any())
+                {
+                    ChatMessageDisplay newAssistantMessage = messages.Last();
+                    _chatHistory.Add(newAssistantMessage);
+                }
+            }
+            else
+            {
+                Console.Error.WriteLine($"API error: {response.StatusCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Exception calling API: {ex.Message}");
+        }
+        finally
+        {
+            // Clear the input field after sending.
+            //TODO - Clear right away and prompt a spinning wheel that says "Waiting for response."
+            _userInput = string.Empty;
+        }
+    }
+}
