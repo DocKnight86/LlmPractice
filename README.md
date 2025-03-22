@@ -12,7 +12,7 @@ In Version 2 I plan to add support for deepseek-r1 and gemma3 all from the same 
 
 All inspiration for this project came from: https://medium.com/scrum-and-coke/creating-a-web-api-with-net-9-to-interact-with-a-local-ollama-ai-instance-using-llama-3-1-41fcc3cceb8b
 
-Already quite a bit had changed from the writing of that article though regarding the Microsoft.Extensions.AI package.
+Already quite a bit had changed from the writing of that article though regarding the Microsoft.Extensions.AI package and this was not a simple "copy and paste" to get working from that article.
 
 Watch a demo video here: 
 (In version 2 there will be a "Thinking" indicator added. Feel free to jump around as some of the responses take some time due to the hardware limitations of my laptop.)
