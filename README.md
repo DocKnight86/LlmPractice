@@ -5,3 +5,5 @@ All inspiration for this project came from: https://medium.com/scrum-and-coke/cr
 Already quite a bit had changed from the writing of that article though regarding the Microsoft.Extensions.AI package.
 
 Requires .NET 9, Docker running ollama llama3.1 on port 11434
+
+Watch a demo video here: https://www.youtube.com/watch?v=KcARRbxvsKY 
