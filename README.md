@@ -1,12 +1,14 @@
 # LlmPractice
 
+Version 1
+
 A local running LLM built into a Blazor App.
 
 Requires .NET 9, Docker running ollama llama3.1 on port 11434
 
 Can easily switch to any other LLM - https://ollama.com/library
 
-In V2 I plan to add support for deepseek-r1 and gemma3 all from the same interface.
+In Version 2 I plan to add support for deepseek-r1 and gemma3 all from the same interface.
 
 All inspiration for this project came from: https://medium.com/scrum-and-coke/creating-a-web-api-with-net-9-to-interact-with-a-local-ollama-ai-instance-using-llama-3-1-41fcc3cceb8b
 
