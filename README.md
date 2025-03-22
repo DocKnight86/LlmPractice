@@ -7,3 +7,4 @@ Already quite a bit had changed from the writing of that article though regardin
 Requires .NET 9, Docker running ollama llama3.1 on port 11434
 
 Watch a demo video here: https://www.youtube.com/watch?v=KcARRbxvsKY 
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/KcARRbxvsKY/0.jpg)](https://www.youtube.com/watch?v=KcARRbxvsKY)
