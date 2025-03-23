@@ -1,4 +1,5 @@
-﻿using LlmPractice.Models;
+﻿using LlmPractice.Factories;
+using LlmPractice.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.AI;
 
@@ -8,13 +9,13 @@ namespace LlmPractice.Controllers
     [Route("api/[controller]")]
     public class ChatController : ControllerBase
     {
-        private readonly IChatClient _chatClient;
+        private readonly IChatClientFactory _chatClientFactory;
         private readonly ILogger<ChatController> _logger;
         private readonly IConfiguration _configuration;
 
-        public ChatController(IChatClient chatClient, ILogger<ChatController> logger, IConfiguration configuration)
+        public ChatController(IChatClientFactory chatClientFactory, ILogger<ChatController> logger, IConfiguration configuration)
         {
-            _chatClient = chatClient;
+            _chatClientFactory = chatClientFactory;
             _logger = logger;
             _configuration = configuration;
         }
@@ -23,32 +24,48 @@ namespace LlmPractice.Controllers
         public async Task<IActionResult> Chat(ChatPrompt chatPrompt)
         {
             List<ChatMessage> messages = GroundPrompt(chatPrompt);
+
+            // Use the model from the prompt or fall back to the configured default.
+            string selectedModel = string.IsNullOrWhiteSpace(chatPrompt.Model)
+                ? _configuration["AI:Ollama:ChatModel"]
+                : chatPrompt.Model;
+
             try
             {
-                ChatResponse response = await _chatClient.GetResponseAsync(messages);
+                IChatClient chatClient = _chatClientFactory.Create(selectedModel);
+                ChatResponse response = await chatClient.GetResponseAsync(messages);
+
                 return Ok(response);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error processing chat prompt");
+
                 return StatusCode(500, "Internal server error");
             }
         }
-
+        
         [HttpPost("chathistory")]
         public async Task<IActionResult> ChatHistory(ChatPrompt chatPrompt)
         {
             List<ChatMessage> messages = GroundPrompt(chatPrompt);
+
+            // Use the model from the prompt or fallback to the configured default.
+            string selectedModel = string.IsNullOrWhiteSpace(chatPrompt.Model)
+                ? _configuration["AI:Ollama:ChatModel"]
+                : chatPrompt.Model;
+            
             try
             {
-                ChatResponse response = await _chatClient.GetResponseAsync(messages);
-        
-                // Extract the reply text from the ChatResponse.
+                IChatClient chatClient = _chatClientFactory.Create(selectedModel);
+                ChatResponse response = await chatClient.GetResponseAsync(messages);
+
+                // Extract the reply text and add it to the messages
                 string replyText = response.Text;
         
                 // Create a new ChatMessage using the extracted text.
                 messages.Add(new ChatMessage(ChatRole.Assistant, replyText));
-        
+
                 return Ok(messages.Select(m => new
                 {
                     Role = m.Role.ToString(),
@@ -58,19 +75,15 @@ namespace LlmPractice.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error processing chat prompt");
+
                 return StatusCode(500, "Internal server error");
             }
         }
 
         private List<ChatMessage> GroundPrompt(ChatPrompt chatPrompt)
         {
-            string? systemMessage = _configuration["ChatSettings:SystemMessage"];
-            string? assistantMessage = _configuration["ChatSettings:AssistantMessage"];
-
             return new List<ChatMessage>
             {
-                new ChatMessage(ChatRole.System, systemMessage ?? "Default system message."),
-                new ChatMessage(ChatRole.Assistant, assistantMessage ?? "Default assistant message."),
                 new ChatMessage(ChatRole.User, chatPrompt.Message)
             };
         }
