@@ -12,7 +12,7 @@ https://hub.docker.com/r/ollama/ollama - Official Ollama Docker image.
 
 All inspiration for this project came from: https://medium.com/scrum-and-coke/creating-a-web-api-with-net-9-to-interact-with-a-local-ollama-ai-instance-using-llama-3-1-41fcc3cceb8b
 
-Quite a bit had already changed since the article was written, particularly with the Microsoft.Extensions.AI package, so it wasn’t as simple as copying and pasting to get it working.
+Quite a bit had already changed since the article was written, particularly with the Microsoft.Extensions.AI package, so it wasn’t as simple as copying and pasting to get it working but the article pointed me in the right direction and got me thinking!
 
 **Watch the demo videos here:**
 
