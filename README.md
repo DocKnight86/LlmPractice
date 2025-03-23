@@ -12,9 +12,11 @@ All inspiration for this project came from: https://medium.com/scrum-and-coke/cr
 
 Quite a bit had already changed since the article was written, particularly with the Microsoft.Extensions.AI package, so it wasn’t as simple as copying and pasting to get it working.
 
+
 Watch the demo videos here: 
 Version 2 Video
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/FcH_w3bsdZQ/0.jpg)](https://www.youtube.com/watch?v=FcH_w3bsdZQ)
+
 
 Version 1 Video (depreciated)
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/6Y4LnnlxGQk/0.jpg)](https://www.youtube.com/watch?v=6Y4LnnlxGQk)
