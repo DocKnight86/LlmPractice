@@ -2,7 +2,7 @@
 
 Version 2
 
-A local running LLM built into a Blazor App.
+Local running large language models built into a Blazor App.
 
 Requires .NET 9 and Docker running the Ollama docker image with llama3.1:8b and llama2:7b installed on port 11434
 
