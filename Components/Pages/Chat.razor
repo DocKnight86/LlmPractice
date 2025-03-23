@@ -5,8 +5,18 @@
 
 <h3>Chat with Dan Bot</h3>
 
+<!-- Model selection dropdown -->
+<div class="model-selection mb-2">
+    <label for="modelSelect">Select Model:</label>
+    <select id="modelSelect" @bind="_selectedModel" class="form-select">
+        <option value="llama3.1:8b">Llama 3.1 (8b)</option>
+        <option value="llama2:7b">Llama 2 (7b)</option>
+    </select>
+</div>
+
 <div class="chat-container" style="display: flex; flex-direction: column; height: 80vh; border: 1px solid #ccc; padding: 10px;">
-    <!-- Chat history at the top -->
+
+    <!-- Chat history -->
     <div class="chat-history" style="flex: 1; overflow-y: auto; margin-bottom: 10px;">
         <h4>Chat History</h4>
         <ul class="list-group">
@@ -18,7 +28,7 @@
             }
         </ul>
     </div>
-    
+
     <!-- Spinner while waiting for response -->
     @if (_isLoading)
     {
@@ -30,7 +40,7 @@
         </div>
     }
 
-    <!-- Chat input at the bottom -->
+    <!-- Chat input -->
     <div class="chat-input">
         <textarea class="form-control" @bind="_userInput" placeholder="Type your message here..." rows="3"></textarea>
         <button class="btn btn-primary mt-2" @onclick="SendMessage" disabled="@_isLoading">Send</button>
@@ -39,6 +49,7 @@
 
 @code {
     private string _userInput = string.Empty;
+    private string _selectedModel = "llama3.1:8b"; // default model selection
     private List<ChatMessageDisplay> _chatHistory = new();
     private bool _isLoading = false;
 
@@ -55,11 +66,8 @@
             return;
         }
 
-        // Add the user's message immediately to the chat history.
         _chatHistory.Add(new ChatMessageDisplay { Role = "User", Message = _userInput });
-
-        // Create a ChatPrompt object to send to the API.
-        ChatPrompt prompt = new ChatPrompt { Message = _userInput };
+        ChatPrompt prompt = new ChatPrompt { Message = _userInput, Model = _selectedModel };
 
         _isLoading = true;
         try

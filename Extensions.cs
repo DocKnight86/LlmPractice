@@ -22,7 +22,7 @@ namespace LlmPractice
 
             if (!string.IsNullOrWhiteSpace(ollamaEndpoint))
             {
-                builder.Services.AddChatClient(new OllamaChatClient(ollamaEndpoint, builder.Configuration["AI:Ollama:ChatModel"] ?? "llama3.1"))
+                builder.Services.AddChatClient(new OllamaChatClient(ollamaEndpoint, builder.Configuration["AI:Ollama:ChatModel"] ?? "llama3.1:8b"))
                     .UseFunctionInvocation()
                     .UseOpenTelemetry(configure: t => t.EnableSensitiveData = true)
                     .UseLogging(loggerFactory)

@@ -1,5 +1,6 @@
 using LlmPractice;
 using LlmPractice.Components;
+using LlmPractice.Factories;
 using Scalar.AspNetCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,8 @@ builder.Services.AddOpenApi();
 // Adding application services to the builder
 builder.AddApplicationServices();
 
+builder.Services.AddSingleton<IChatClientFactory, ChatClientFactory>();
+
 builder.Services.AddHttpClient();
 
 WebApplication app = builder.Build();
@@ -28,7 +31,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 
 app.UseAntiforgery();
 
