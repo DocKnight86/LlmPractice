@@ -2,6 +2,7 @@
 using LlmPractice.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.AI;
+using System.Text.Json;
 
 namespace LlmPractice.Controllers
 {
@@ -34,6 +35,9 @@ namespace LlmPractice.Controllers
             
             try
             {
+                // write the new user message to the ChatHistory file.
+                await AppendChatMessageAsync(new ChatMessage(ChatRole.User, chatPrompt.Message));
+
                 IChatClient chatClient = _chatClientFactory.Create(selectedModel ?? string.Empty);
                 ChatResponse response = await chatClient.GetResponseAsync(messages);
 
@@ -41,7 +45,11 @@ namespace LlmPractice.Controllers
                 string replyText = response.Text;
         
                 // Create a new ChatMessage using the extracted text.
-                messages.Add(new ChatMessage(ChatRole.Assistant, replyText));
+                ChatMessage assistantMessage = new ChatMessage(ChatRole.Assistant, replyText);
+                messages.Add(assistantMessage);
+
+                // write the bot message to the ChatHistory file.
+                await AppendChatMessageAsync(assistantMessage);
 
                 return Ok(messages.Select(m => new
                 {
@@ -55,6 +63,27 @@ namespace LlmPractice.Controllers
 
                 return StatusCode(500, "Internal server error");
             }
+        }
+
+        // function to append chat messages to a local NDJSON file
+        private async Task AppendChatMessageAsync(ChatMessage message)
+        {
+            // Define the folder for chat history.
+            string folderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ChatHistory");
+
+            // If the folder not exist, create it.
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            // Define the file path.
+            string filePath = Path.Combine(folderPath, "chat_history.ndjson");
+
+            // Serialize the message to JSON.
+            string json = JsonSerializer.Serialize(message);
+
+            await System.IO.File.AppendAllTextAsync(filePath, json + Environment.NewLine);
         }
 
         private List<ChatMessage> GroundPrompt(ChatPrompt chatPrompt)
