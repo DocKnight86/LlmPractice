@@ -9,6 +9,8 @@ namespace LlmPractice.Controllers
     [Route("api/[controller]")]
     public class ChatController : ControllerBase
     {
+        private const int ApproxTokensPerMessage = 50; // Rough estimate: average number of tokens per chat message. What should it be?
+
         private readonly IChatClientFactory _chatClientFactory;
         private readonly ILogger<ChatController> _logger;
         private readonly IConfiguration _configuration;
@@ -82,10 +84,60 @@ namespace LlmPractice.Controllers
 
         private List<ChatMessage> GroundPrompt(ChatPrompt chatPrompt)
         {
-            return new List<ChatMessage>
+            List<ChatMessage> messages = new List<ChatMessage>();
+
+            // Add a system prompt to help the model focus on the latest query.
+            // How can this be optimized in the future? Is there a better way I can be doing this?
+            messages.Add(new ChatMessage(ChatRole.System, "Focus on the most recent question and ignore older context if it's not relevant."));
+
+            // Trim the conversation history to prevent token overrun.
+            List<ChatMessage> trimmedHistory = TrimConversationHistory(chatPrompt.ConversationHistory, maxTokenCount: 2048);
+            if (trimmedHistory.Any())
             {
-                new ChatMessage(ChatRole.User, chatPrompt.Message)
-            };
+                messages.AddRange(trimmedHistory);
+            }
+
+            // Only append the latest user message if it's not already the last message in history.
+            if (!trimmedHistory.Any() ||
+                trimmedHistory.Last().Role != ChatRole.User ||
+                trimmedHistory.Last().Text != chatPrompt.Message)
+            {
+                messages.Add(new ChatMessage(ChatRole.User, chatPrompt.Message));
+            }
+    
+            // Log the estimated total token count for the full prompt.
+            int totalPromptTokens = messages.Count * ApproxTokensPerMessage;
+
+            // Debug for now to view tokens and limits in the console.
+            Console.WriteLine($"[GroundPrompt] Total tokens for built prompt: {totalPromptTokens} (approximation, {messages.Count} messages * {ApproxTokensPerMessage} tokens each)");
+
+            return messages;
+        }
+
+        private List<ChatMessage> TrimConversationHistory(List<ChatMessage> history, int maxTokenCount)
+        {
+            int totalTokens = history.Count * ApproxTokensPerMessage;
+            int allowedMessages = maxTokenCount / ApproxTokensPerMessage;
+    
+            // Debug for now to view tokens and limits in the console.
+            Console.WriteLine($"[TrimConversationHistory] Total tokens in history: {totalTokens}");
+            Console.WriteLine($"[TrimConversationHistory] Allowed messages (max tokens {maxTokenCount}): {allowedMessages}");
+    
+            if (history.Count > allowedMessages)
+            {
+                List<ChatMessage> trimmed = history.Skip(history.Count - allowedMessages).ToList();
+                int trimmedTokens = trimmed.Count * ApproxTokensPerMessage;
+
+                // Debug for now to view tokens and limits in the console.
+                Console.WriteLine($"[TrimConversationHistory] Total tokens after trimming: {trimmedTokens}");
+
+                return trimmed;
+            }
+    
+            // Debug for now to view tokens and limits in the console.
+            Console.WriteLine($"[TrimConversationHistory] No trimming required. Total tokens: {totalTokens}");
+
+            return history;
         }
     }
 }

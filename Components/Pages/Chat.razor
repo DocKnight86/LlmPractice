@@ -1,6 +1,7 @@
 ﻿@rendermode InteractiveServer
 @page "/chat"
 @using LlmPractice.Models
+@using Microsoft.Extensions.AI
 @inject HttpClient Http
 
 <h3>Chat with Dan Bot</h3>
@@ -67,7 +68,18 @@
         }
 
         _chatHistory.Add(new ChatMessageDisplay { Role = "User", Message = _userInput });
-        ChatPrompt prompt = new ChatPrompt { Message = _userInput, Model = _selectedModel };
+    
+        // Create a ChatPrompt that includes the full conversation history.
+        ChatPrompt prompt = new ChatPrompt 
+        { 
+            Message = _userInput, 
+            Model = _selectedModel,
+            ConversationHistory = _chatHistory.Select(m => 
+                new ChatMessage(
+                    m.Role.Equals("User", StringComparison.OrdinalIgnoreCase) ? ChatRole.User : ChatRole.Assistant, 
+                    m.Message)
+            ).ToList()
+        };
 
         _isLoading = true;
         try
@@ -80,6 +92,7 @@
                 if (messages != null && messages.Any())
                 {
                     ChatMessageDisplay newAssistantMessage = messages.Last();
+
                     _chatHistory.Add(newAssistantMessage);
                 }
             }
