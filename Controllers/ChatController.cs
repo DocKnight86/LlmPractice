@@ -21,45 +21,20 @@ namespace LlmPractice.Controllers
             _logger = logger;
             _configuration = configuration;
         }
-
-        [HttpPost]
+        
+        [HttpPost("chathistory")]
         public async Task<IActionResult> Chat(ChatPrompt chatPrompt)
         {
             List<ChatMessage> messages = GroundPrompt(chatPrompt);
 
-            // Use the model from the prompt or fall back to the configured default.
-            string selectedModel = string.IsNullOrWhiteSpace(chatPrompt.Model)
-                ? _configuration["AI:Ollama:ChatModel"]
-                : chatPrompt.Model;
-
-            try
-            {
-                IChatClient chatClient = _chatClientFactory.Create(selectedModel);
-                ChatResponse response = await chatClient.GetResponseAsync(messages);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error processing chat prompt");
-
-                return StatusCode(500, "Internal server error");
-            }
-        }
-        
-        [HttpPost("chathistory")]
-        public async Task<IActionResult> ChatHistory(ChatPrompt chatPrompt)
-        {
-            List<ChatMessage> messages = GroundPrompt(chatPrompt);
-
             // Use the model from the prompt or fallback to the configured default.
-            string selectedModel = string.IsNullOrWhiteSpace(chatPrompt.Model)
+            string? selectedModel = string.IsNullOrWhiteSpace(chatPrompt.Model)
                 ? _configuration["AI:Ollama:ChatModel"]
                 : chatPrompt.Model;
             
             try
             {
-                IChatClient chatClient = _chatClientFactory.Create(selectedModel);
+                IChatClient chatClient = _chatClientFactory.Create(selectedModel ?? string.Empty);
                 ChatResponse response = await chatClient.GetResponseAsync(messages);
 
                 // Extract the reply text and add it to the messages

@@ -56,8 +56,8 @@
 
     public class ChatMessageDisplay
     {
-        public string Role { get; set; }
-        public string Message { get; set; }
+        public required string Role { get; init; }
+        public required string Message { get; init; }
     }
 
     private async Task SendMessage()
