@@ -14,6 +14,8 @@ All inspiration for this project came from: https://medium.com/scrum-and-coke/cr
 
 Quite a bit had already changed since the article was written, particularly with the Microsoft.Extensions.AI package, so it wasn’t as simple as copying and pasting to get it working but the article pointed me in the right direction and got me thinking!
 
+![Screenshot 2025-03-25 122451](https://github.com/user-attachments/assets/62938a9a-a9f0-4513-8f6f-f32921b6cb9d)
+
 -------------------------------------------------------------------------------------------------------------------
 
 **Change Logs**
