@@ -7,19 +7,13 @@ namespace LlmPractice.Factories
         IChatClient Create(string model);
     }
 
-    public class ChatClientFactory : IChatClientFactory
+    public class ChatClientFactory(IConfiguration configuration) : IChatClientFactory
     {
-        private readonly IConfiguration _configuration;
-
-        public ChatClientFactory(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
         public IChatClient Create(string model)
         {
-            string? endpoint = _configuration["AI:Ollama:Endpoint"];
-            return new OllamaChatClient(endpoint, model);
+            string? endpoint = configuration["AI:Ollama:Endpoint"];
+
+            return new OllamaChatClient(endpoint ?? string.Empty, model);
         }
     }
 }

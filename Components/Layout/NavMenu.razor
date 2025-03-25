@@ -1,10 +1,4 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">LlmPractice</a>
-    </div>
-</div>
-
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+﻿<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="nav flex-column">
@@ -16,9 +10,16 @@
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="chat">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Dan Bot
+                <span class="bi bi-chat-left-dots custom-nav-icon" aria-hidden="true"></span> Local AI Assistant
             </NavLink>
         </div>
     </nav>
 </div>
 
+<style>
+    .custom-nav-icon {
+        font-size: 1.3rem; /* icon size */
+        line-height: 1.5rem; /* match the icon’s height or the parent text line-height */
+        margin-right: 0.5rem; /* spacing between icon and text */
+    }
+</style>

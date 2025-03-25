@@ -1,8 +1,12 @@
-﻿namespace LlmPractice.Models
+﻿using Microsoft.Extensions.AI;
+
+namespace LlmPractice.Models
 {
     public class ChatPrompt
     {
-        public string Message { get; set; }
-        public string Model { get; set; }
+        public required string Message { get; init; }
+        public required string Model { get; init; }
+
+        public List<ChatMessage> ConversationHistory { get; init; } = [];
     }
 }

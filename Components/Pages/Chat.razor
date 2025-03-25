@@ -1,9 +1,8 @@
 ﻿@rendermode InteractiveServer
 @page "/chat"
 @using LlmPractice.Models
+@using Microsoft.Extensions.AI
 @inject HttpClient Http
-
-<h3>Chat with Dan Bot</h3>
 
 <!-- Model selection dropdown -->
 <div class="model-selection mb-2">
@@ -23,7 +22,7 @@
             @foreach (ChatMessageDisplay msg in _chatHistory)
             {
                 <li class="list-group-item">
-                    <strong>@(msg.Role.Equals("Assistant", StringComparison.OrdinalIgnoreCase) ? "Dan Bot" : msg.Role):</strong> @msg.Message
+                    <strong>@(msg.Role.Equals("Assistant", StringComparison.OrdinalIgnoreCase) ? "Assistant" : msg.Role):</strong> @msg.Message
                 </li>
             }
         </ul>
@@ -55,8 +54,8 @@
 
     public class ChatMessageDisplay
     {
-        public string Role { get; set; }
-        public string Message { get; set; }
+        public required string Role { get; init; }
+        public required string Message { get; init; }
     }
 
     private async Task SendMessage()
@@ -67,7 +66,18 @@
         }
 
         _chatHistory.Add(new ChatMessageDisplay { Role = "User", Message = _userInput });
-        ChatPrompt prompt = new ChatPrompt { Message = _userInput, Model = _selectedModel };
+    
+        // Create a ChatPrompt that includes the full conversation history.
+        ChatPrompt prompt = new ChatPrompt 
+        { 
+            Message = _userInput, 
+            Model = _selectedModel,
+            ConversationHistory = _chatHistory.Select(m => 
+                new ChatMessage(
+                    m.Role.Equals("User", StringComparison.OrdinalIgnoreCase) ? ChatRole.User : ChatRole.Assistant, 
+                    m.Message)
+            ).ToList()
+        };
 
         _isLoading = true;
         try
@@ -80,6 +90,7 @@
                 if (messages != null && messages.Any())
                 {
                     ChatMessageDisplay newAssistantMessage = messages.Last();
+
                     _chatHistory.Add(newAssistantMessage);
                 }
             }

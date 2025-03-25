@@ -2,6 +2,31 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h2>Your Locally Hosted AI Assistant</h2>
 
-Welcome to your new app.
+<div>
+    <h4>Requirements (Windows)</h4>
+    <ol>
+        <li><a href="https://www.docker.com/" target="_blank" rel="noopener noreferrer">Docker Desktop</a> (must be installed prior to moving on to Setup)</li>
+        <li><a href="https://hub.docker.com/r/ollama/ollama/" target="_blank" rel="noopener noreferrer">Ollama Docker Image</a> (can be pulled from the Command Prompt)</li>
+    </ol>
+</div>
+
+<div>
+    <h4>Setup (Windows)</h4>
+    <ol>
+        <li>Open your Command Prompt and enter: <strong>docker pull ollama/ollama</strong></li>
+        <li>With the Command Prompt still open enter: <strong>docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama</strong></li>
+        <li>Open Docker Desktop and run your ollama image.</li>
+        <li>Select Containers and if it is running you will see the Exec tab. Click it.</li>
+        <li>Inside the Docker command prompt enter # <strong>ollama list</strong>. This command shows all installed LLM models. By default, it should be empty.</li>
+        <li>Install the currently support models by running the command # <strong>ollama pull llama2:7b</strong> and # <strong>ollama pull llama3.1:8b</strong>.</li>
+    </ol>
+</div>
+
+<div>
+    Your setup should now look similar to the image below. If you run # <strong>ollama list</strong> again it should now show your installed models.
+    <img src="/CustomImages/docker.png" alt="Docker Image" style="display: block; max-width: 1000px; width: auto; height: auto;">
+</div>
+
+
