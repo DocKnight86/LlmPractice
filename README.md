@@ -28,7 +28,7 @@ Quite a bit had already changed since the article was written, particularly with
 - Fixed warnings produced on compile.
 - Added asynchronous logging of chat messages to a local NDJSON file.
   - File can be found in the ChatHistory folder which will be created when first prompting the bot.
-  - Will eventually allow for saving / reloading of past conversations.
+  - Will eventually allow for the reloading of past conversations or using ML.NET machine learning to better tokenize long running chats.
   - Will eventually be moved to a database, but this is easier for local running of the application.
 - Added AppendChatMessageAsync function to serialize messages as JSON and append them to the file.
 
