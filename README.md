@@ -16,6 +16,8 @@ Quite a bit had already changed since the article was written, particularly with
 
 ![Screenshot 2025-03-25 122451](https://github.com/user-attachments/assets/62938a9a-a9f0-4513-8f6f-f32921b6cb9d)
 
+![Screenshot 2025-03-25 122819](https://github.com/user-attachments/assets/c585612e-795b-441a-9de1-2ec21e0bb495)
+
 -------------------------------------------------------------------------------------------------------------------
 
 **Change Logs**
@@ -34,11 +36,16 @@ Quite a bit had already changed since the article was written, particularly with
 
 **Watch the demo videos here:**
 
-Version 2 Video
+Version 3 Video (NEWEST)
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/mo-5q1rvdpE/0.jpg)](https://www.youtube.com/watch?v=mo-5q1rvdpE)
+
+
+Version 2 Video (old)
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/FcH_w3bsdZQ/0.jpg)](https://www.youtube.com/watch?v=FcH_w3bsdZQ)
 
 
-Version 1 Video (depreciated)
+Version 1 Video (old)
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/6Y4LnnlxGQk/0.jpg)](https://www.youtube.com/watch?v=6Y4LnnlxGQk)
