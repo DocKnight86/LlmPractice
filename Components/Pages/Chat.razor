@@ -49,7 +49,7 @@
 @code {
     private string _userInput = string.Empty;
     private string _selectedModel = "llama3.1:8b"; // default model selection
-    private List<ChatMessageDisplay> _chatHistory = new();
+    private readonly List<ChatMessageDisplay> _chatHistory = new();
     private bool _isLoading = false;
 
     public class ChatMessageDisplay
@@ -96,12 +96,15 @@
             }
             else
             {
-                Console.Error.WriteLine($"API error: {response.StatusCode}");
+                // display most likely reason why it didn't work to user.
+                _chatHistory.Add(new ChatMessageDisplay { Role = "SYSTEM", Message = "Docker image not running or selected LLM not installed." });
+
+                await Console.Error.WriteLineAsync($"API error: {response.StatusCode}");
             }
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Exception calling API: {ex.Message}");
+            await Console.Error.WriteLineAsync($"Exception calling API: {ex.Message}");
         }
         finally
         {
