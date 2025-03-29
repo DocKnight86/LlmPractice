@@ -3,6 +3,7 @@
 @using LlmPractice.Models
 @using Microsoft.Extensions.AI
 @inject HttpClient Http
+@inject IJSRuntime JS
 
 <!-- Model selection dropdown -->
 <div class="model-selection mb-2">
@@ -16,7 +17,7 @@
 <div class="chat-container" style="display: flex; flex-direction: column; height: 80vh; border: 1px solid #ccc; padding: 10px;">
 
     <!-- Chat history -->
-    <div class="chat-history" style="flex: 1; overflow-y: auto; margin-bottom: 10px;">
+    <div id="chatHistory" class="chat-history" style="flex: 1; overflow-y: auto; margin-bottom: 10px;">
         <h4>Chat History</h4>
         <ul class="list-group">
             @foreach (ChatMessageDisplay msg in _chatHistory)
@@ -46,11 +47,22 @@
     </div>
 </div>
 
+<!-- JS function to auto scroll the chatHistory box to the bottom each time -->
+<script>
+    window.scrollToBottom = () => {
+    const chatHistory = document.getElementById("chatHistory");
+    if (chatHistory) {
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+    }
+</script>
+
 @code {
     private string _userInput = string.Empty;
     private string _selectedModel = "llama3.1:8b"; // default model selection
     private readonly List<ChatMessageDisplay> _chatHistory = new();
     private bool _isLoading = false;
+    private bool _shouldScroll = false;
 
     public class ChatMessageDisplay
     {
@@ -66,7 +78,10 @@
         }
 
         _chatHistory.Add(new ChatMessageDisplay { Role = "User", Message = _userInput });
-    
+
+        // Indicate that scrolling should happen after a user posts a new message.
+        _shouldScroll = true;
+
         // Create a ChatPrompt that includes the full conversation history.
         ChatPrompt prompt = new ChatPrompt 
         { 
@@ -82,7 +97,7 @@
         _isLoading = true;
         try
         {
-            // Call the ChatHistory endpoint on the API using the absolute URL which will be changed in the future to auto detect.
+            // Call the ChatHistory endpoint on the API using the absolute URL which will be changed in the future to auto-detect.
             HttpResponseMessage response = await Http.PostAsJsonAsync("http://localhost:5000/api/chat/chathistory", prompt);
             if (response.IsSuccessStatusCode)
             {
@@ -110,6 +125,19 @@
         {
             _isLoading = false;
             _userInput = string.Empty;
+
+            // Set flag again to ensure scrolling after final UI update.
+            _shouldScroll = true;
+        }
+    }
+
+    // method called after each render overriden to make sure "scrollToBottom" is correctly called each time.
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_shouldScroll)
+        {
+            await JS.InvokeVoidAsync("scrollToBottom");
+            _shouldScroll = false;
         }
     }
 }
