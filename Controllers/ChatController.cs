@@ -10,7 +10,8 @@ namespace LlmPractice.Controllers
     [Route("api/[controller]")]
     public class ChatController : ControllerBase
     {
-        private const int ApproxTokensPerMessage = 50; // Rough estimate: average number of tokens per chat message. What should it be?
+        private const int TokensPerMessage = 50; // Rough estimate: average number of tokens per chat message. What should it be?
+        private const int MaxTokenCount = 2048; // will make this more dynamic in the future to take into account the model/limits.
 
         private readonly IChatClientFactory _chatClientFactory;
         private readonly ILogger<ChatController> _logger;
@@ -35,13 +36,13 @@ namespace LlmPractice.Controllers
             
             try
             {
-                // write the new user message to the ChatHistory file.
-                await AppendChatMessageAsync(new ChatMessage(ChatRole.User, chatPrompt.Message));
-
                 IChatClient chatClient = _chatClientFactory.Create(selectedModel ?? string.Empty);
                 ChatResponse response = await chatClient.GetResponseAsync(messages);
 
-                // Extract the reply text and add it to the messages
+                // write the new user message to the ChatHistory file only if connection was successful.
+                await AppendChatMessageAsync(new ChatMessage(ChatRole.User, chatPrompt.Message));
+
+                // Extract the assistant reply text and add it to the messages
                 string replyText = response.Text;
         
                 // Create a new ChatMessage using the extracted text.
@@ -95,42 +96,40 @@ namespace LlmPractice.Controllers
             messages.Add(new ChatMessage(ChatRole.System, "Focus on the most recent question and ignore older context if it's not relevant."));
 
             // Trim the conversation history to prevent token overrun.
-            List<ChatMessage> trimmedHistory = TrimConversationHistory(chatPrompt.ConversationHistory, maxTokenCount: 2048);
+            List<ChatMessage> trimmedHistory = TrimConversationHistory(chatPrompt.ConversationHistory);
             if (trimmedHistory.Any())
             {
                 messages.AddRange(trimmedHistory);
             }
 
             // Only append the latest user message if it's not already the last message in history.
-            if (!trimmedHistory.Any() ||
-                trimmedHistory.Last().Role != ChatRole.User ||
-                trimmedHistory.Last().Text != chatPrompt.Message)
+            if (!trimmedHistory.Any() || trimmedHistory.Last().Role != ChatRole.User || trimmedHistory.Last().Text != chatPrompt.Message)
             {
                 messages.Add(new ChatMessage(ChatRole.User, chatPrompt.Message));
             }
     
             // Log the estimated total token count for the full prompt.
-            int totalPromptTokens = messages.Count * ApproxTokensPerMessage;
+            int totalPromptTokens = messages.Count * TokensPerMessage;
 
             // Debug for now to view tokens and limits in the console.
-            Console.WriteLine($"[GroundPrompt] Total tokens for built prompt: {totalPromptTokens} (approximation, {messages.Count} messages * {ApproxTokensPerMessage} tokens each)");
+            Console.WriteLine($"[GroundPrompt] Total tokens for built prompt: {totalPromptTokens} (approximation, {messages.Count} messages * {TokensPerMessage} tokens each)");
 
             return messages;
         }
 
-        private List<ChatMessage> TrimConversationHistory(List<ChatMessage> history, int maxTokenCount)
+        private List<ChatMessage> TrimConversationHistory(List<ChatMessage> history)
         {
-            int totalTokens = history.Count * ApproxTokensPerMessage;
-            int allowedMessages = maxTokenCount / ApproxTokensPerMessage;
+            int totalTokens = history.Count * TokensPerMessage;
+            int allowedMessages = MaxTokenCount / TokensPerMessage;
     
             // Debug for now to view tokens and limits in the console.
             Console.WriteLine($"[TrimConversationHistory] Total tokens in history: {totalTokens}");
-            Console.WriteLine($"[TrimConversationHistory] Allowed messages (max tokens {maxTokenCount}): {allowedMessages}");
+            Console.WriteLine($"[TrimConversationHistory] Allowed messages (max tokens {MaxTokenCount}): {allowedMessages}");
     
             if (history.Count > allowedMessages)
             {
                 List<ChatMessage> trimmed = history.Skip(history.Count - allowedMessages).ToList();
-                int trimmedTokens = trimmed.Count * ApproxTokensPerMessage;
+                int trimmedTokens = trimmed.Count * TokensPerMessage;
 
                 // Debug for now to view tokens and limits in the console.
                 Console.WriteLine($"[TrimConversationHistory] Total tokens after trimming: {trimmedTokens}");

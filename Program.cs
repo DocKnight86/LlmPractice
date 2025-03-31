@@ -19,7 +19,14 @@ builder.AddApplicationServices();
 
 builder.Services.AddSingleton<IChatClientFactory, ChatClientFactory>();
 
-builder.Services.AddHttpClient();
+// Configure a named HttpClient with a 5-minute timeout so the model has more time to respond than the default 100 seconds.
+builder.Services.AddHttpClient("LongRunningClient", client =>
+{
+    client.Timeout = TimeSpan.FromMinutes(5);
+});
+
+// Register the default HttpClient to always use the named "LongRunningClient".
+builder.Services.AddTransient<HttpClient>(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("LongRunningClient"));
 
 WebApplication app = builder.Build();
 
