@@ -14,10 +14,6 @@ All inspiration for this project came from: https://medium.com/scrum-and-coke/cr
 
 Quite a bit had already changed since the article was written, particularly with the Microsoft.Extensions.AI package, so it wasn’t as simple as copying and pasting to get it working but the article pointed me in the right direction and got me thinking!
 
-![Screenshot 2025-03-25 122451](https://github.com/user-attachments/assets/62938a9a-a9f0-4513-8f6f-f32921b6cb9d)
-
-![Screenshot 2025-03-25 122819](https://github.com/user-attachments/assets/c585612e-795b-441a-9de1-2ec21e0bb495)
-
 -------------------------------------------------------------------------------------------------------------------
 
 **Change Logs**
@@ -33,6 +29,10 @@ Quite a bit had already changed since the article was written, particularly with
 - Added AppendChatMessageAsync function to serialize messages as JSON and append them to the file.
 
 -------------------------------------------------------------------------------------------------------------------
+
+![Screenshot 2025-03-25 122451](https://github.com/user-attachments/assets/62938a9a-a9f0-4513-8f6f-f32921b6cb9d)
+
+![Screenshot 2025-03-25 122819](https://github.com/user-attachments/assets/c585612e-795b-441a-9de1-2ec21e0bb495)
 
 **Watch the demo videos here:**
 
