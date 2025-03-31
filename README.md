@@ -1,6 +1,6 @@
 # LlmPractice
 
-Version 3
+Version 4
 
 Local running large language models built into a Blazor App.
 
@@ -17,6 +17,13 @@ Quite a bit had already changed since the article was written, particularly with
 -------------------------------------------------------------------------------------------------------------------
 
 **Change Logs**
+
+*Version 3 to version 4:*
+- Added user-facing error message if the Docker image is not running or the LLM model selected is not installed.
+- Only save user messages if a connection is successful.
+- MaxTokenCount is now a const and better defined. It will be made more dynamic in a future update.
+- Makes sure that when a user posts a message or the assistant responds, a long-running history block will scroll to the bottom.
+- Post requests now time out after 5 minutes (was the default 100 seconds) to allow the model more time to answer long-running or complex questions.
 
 *Version 2 to version 3:*
 - Now remembers parts of the conversation history so the models have some recall and ability to go back for context.
